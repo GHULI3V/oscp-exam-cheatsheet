@@ -4,7 +4,7 @@ Updated 2020
 
                                             |All usefull commands and scripts for exam| 
                                              
-                                                Enumeration(BEST). Thanks for Tib3rius for awesome project
+                                            Enumeration(BEST). Thanks for Tib3rius for awesome project
  https://github.com/Tib3rius/AutoRecon - This project safe my life))
  https://github.com/21y4d/nmapAutomator
  ------------------------------------------------------------------------------------------------------------------------------                                       
